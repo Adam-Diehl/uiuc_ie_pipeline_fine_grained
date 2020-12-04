@@ -98,7 +98,7 @@ ttl_final=${data_root}/final
 # EDL
 ## entity extraction
 echo "** Extracting entities **"
-docker run --rm -v ${data_root}:${data_root} -w `pwd` -i --network="host" --gpus device=1 limanling/uiuc_ie_m36 \
+docker run --rm -v ${data_root}:${data_root} -w `pwd` -i --network="host" --gpus all limanling/uiuc_ie_m36 \
     /opt/conda/envs/py36/bin/python \
     /entity/aida_edl/edl.py \
     ${ltf_source} ${rsd_source} ${lang} \
@@ -118,7 +118,7 @@ docker run -v ${PWD}/system/aida_edl/edl_data:/data \
     m36
 ## nominal coreference
 echo "** Starting nominal coreference **"
-# docker run --rm -v ${data_root}:${data_root} -w /aida_nominal_coreference_en -i --gpus device=1 wangqy96/aida_nominal_coreference_en \
+# docker run --rm -v ${data_root}:${data_root} -w /aida_nominal_coreference_en -i --gpus all wangqy96/aida_nominal_coreference_en \
 #     /opt/conda/envs/aida_coreference/bin/python \
 #     /aida_nominal_coreference_en/gail_nominal_no_web.py \
 #     --dev ${edl_bio} \
@@ -135,7 +135,7 @@ docker run --rm -v ${data_root}:${data_root} -w `pwd`  -i limanling/uiuc_ie_m36 
 
 # Relation Extraction (coarse-grained)
 echo "** Extraction relations **"
-docker run --rm -v ${data_root}:${data_root} -w `pwd` -i --gpus device=1 limanling/uiuc_ie_m36 \
+docker run --rm -v ${data_root}:${data_root} -w `pwd` -i --gpus all limanling/uiuc_ie_m36 \
     /opt/conda/envs/aida_relation_coarse/bin/python \
     -u /relation/CoarseRelationExtraction/exec_relation_extraction.py \
     -i ${lang} \
@@ -188,12 +188,12 @@ docker run -v ${data_root}:${data_root} -w `pwd` -i limanling/uiuc_ie_m36 \
 # Event (Coarse)
 echo "** Extracting events for En **"
 # method 1
-docker run --rm -v ${data_root}:${data_root} -i --gpus device=1 lifuhuang/aida_event_lf \
+docker run --rm -v ${data_root}:${data_root} -i --gpus all lifuhuang/aida_event_lf \
     sh /aida_run_all_docker.sh \
     ${event_result_dir} ${edl_tab_final} ${ltf_source} ${edl_cs_coarse}
 
 # Relation Extraction (fine)
-docker run --rm -v ${data_root}:${data_root} -w `pwd` -i --gpus device=1 limanling/uiuc_ie_m36 \
+docker run --rm -v ${data_root}:${data_root} -w `pwd` -i --gpus all limanling/uiuc_ie_m36 \
     /opt/conda/envs/py36/bin/python \
     -u /relation/FineRelationExtraction/EVALfine_grained_relations.py \
     --lang_id ${lang} \
@@ -208,7 +208,7 @@ docker run --rm -v ${data_root}:${data_root} -w `pwd` -i --gpus device=1 limanli
 ##   --reuse_cache \
 docker run -i --rm -v ${data_root}:${data_root} \
     -v ${parent_child_tab_path}:${parent_child_tab_path} \
-    -w /EventTimeArg --gpus device=1 wenhycs/uiuc_event_time \
+    -w /EventTimeArg --gpus all wenhycs/uiuc_event_time \
     python aida_event_time_pipeline.py \
     --relation_cold_start_filename ${relation_cs_fine} --relation \
     --parent_children_filename ${parent_child_tab_path} \
@@ -277,12 +277,12 @@ docker run --rm -v ${data_root}:${data_root} -w `pwd` -i limanling/uiuc_ie_m36 \
     ${event_fine_all_clean}_tmp ${ltf_source} ${event_fine_all_clean} ${lang}
 # Event coreference
 echo "** Event coreference **"
-docker run --rm -v ${data_root}:${data_root} --gpus device=1 laituan245/spanbert_coref \
+docker run --rm -v ${data_root}:${data_root} --gpus all laituan245/spanbert_coref \
     -i ${event_fine_all_clean} -c ${event_corefer} -t ${event_corefer_confidence} -l ${ltf_source}
 # ###### add haoyang's
 docker run -i --rm -v ${data_root}:${data_root} \
     -v ${parent_child_tab_path}:${parent_child_tab_path} \
-    -w /EventTimeArg --gpus device=1 wenhycs/uiuc_event_time \
+    -w /EventTimeArg --gpus all wenhycs/uiuc_event_time \
     python aida_event_time_pipeline.py \
     --time_cold_start_filename ${filler_coarse} \
     --event_cold_start_filename ${event_corefer} \

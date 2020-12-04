@@ -160,7 +160,7 @@ docker run --rm -v ${data_root}:/uiuc/${data_root} -w /stanford-corenlp-aida_0 -
 # EDL
 # entity extraction
 echo "** Extracting coarse-grained entities, relations, and events **"
-docker run --rm -i -v ${data_root}:${data_root} -w /oneie --gpus '"device=1"' limteng/oneie_aida_m36 \
+docker run --rm -i -v ${data_root}:${data_root} -w /oneie --gpus all limteng/oneie_aida_m36 \
     /opt/conda/bin/python \
     /oneie/predict.py -i ${ltf_source} -o ${data_root} -l ${lang} --output_hidden
 ## fine-grained typing by model
@@ -184,7 +184,7 @@ docker run -v ${PWD}/system/aida_edl/edl_data:/data \
     /testdata_${lang}${source}/edl \
     m36
 ## nominal coreference
-docker run --rm -v ${data_root}:${data_root} --gpus '"device=1"' laituan245/spanbert_entity_coref \
+docker run --rm -v ${data_root}:${data_root} --gpus all laituan245/spanbert_entity_coref \
     -edl_official ${edl_tab_link} -edl_freebase ${edl_tab_link_fb} -l ${ltf_source} -o ${edl_tab_final}
 ## tab2cs
 docker run --rm -v ${data_root}:${data_root} -w `pwd`  -i limanling/uiuc_ie_m36 \
@@ -229,7 +229,7 @@ docker run -v ${data_root}:${data_root} -w `pwd` -i limanling/uiuc_ie_m36 \
     --en_color_outfname ${edl_cs_color}
 
 # Relation Extraction (fine)
-docker run --rm -v ${data_root}:${data_root} -w `pwd` -i --gpus '"device=1"' limanling/uiuc_ie_m36 \
+docker run --rm -v ${data_root}:${data_root} -w `pwd` -i --gpus all limanling/uiuc_ie_m36 \
     /opt/conda/envs/py36/bin/python \
     -u /relation/FineRelationExtraction/EVALfine_grained_relations.py \
     --lang_id ${lang} \
@@ -243,7 +243,7 @@ docker run --rm -v ${data_root}:${data_root} -w `pwd` -i --gpus '"device=1"' lim
     --use_gpu
 # ##   --reuse_cache \
 # docker run -i --rm -v ${data_root}:${data_root} \
-#     -w /EventTimeArg --gpus '"device=1"' wenhycs/uiuc_event_time \
+#     -w /EventTimeArg --gpus all wenhycs/uiuc_event_time \
 #     python aida_event_time_pipeline.py \
 #     --relation_cold_start_filename ${relation_cs_fine} --relation \
 #     --output_filename ${relation_4tuple}
@@ -308,11 +308,11 @@ docker run --rm -v ${data_root}:${data_root} -w `pwd` -i limanling/uiuc_ie_m36 \
     /event/aida_event/fine_grained/rewrite_args.py \
     ${event_fine_all_clean}_tmp ${ltf_source} ${event_fine_all_clean} ${lang}
 # echo "** Event coreference **"
-docker run --rm -v ${data_root}:${data_root} --gpus '"device=1"' laituan245/spanbert_coref \
+docker run --rm -v ${data_root}:${data_root} --gpus all laituan245/spanbert_coref \
     -i ${event_fine_all_clean} -c ${event_corefer} -t ${event_corefer_confidence} -l ${ltf_source}
 # # generate 4tuple
 # docker run -i --rm -v ${data_root}:${data_root} \
-#     -w /EventTimeArg --gpus '"device=1"' wenhycs/uiuc_event_time \
+#     -w /EventTimeArg --gpus all wenhycs/uiuc_event_time \
 #     python aida_event_time_pipeline.py \
 #     --time_cold_start_filename ${filler_coarse} \
 #     --event_cold_start_filename ${event_corefer} \
