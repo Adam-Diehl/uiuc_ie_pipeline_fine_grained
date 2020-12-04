@@ -4,6 +4,7 @@ One single script to run text information extraction, including fine-grained ent
 This is forked from [the original repository](https://github.com/limanling/uiuc_ie_pipeline_fine_grained), see documentation there for additional details.
 
 ### Changelog
+- 2020-12-04: Uploaded a python script for postprocessing the output of the en_full pipeline and converting it into a formatted CSV that is easily read into a graph database. Only dependency is Pandas (and the output data from the pipeline). See postprocessing folder. 
 - 2020-12-04: Fixed an issue with hardcoded GPU parameters to let the script run on single GPU devices.
 
 ## Requirements
