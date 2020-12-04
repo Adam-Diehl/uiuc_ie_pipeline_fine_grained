@@ -10,6 +10,17 @@ This is forked from [the original repository](https://github.com/limanling/uiuc_
 ## Requirements
 Docker (Please do not set up UIUC IE Pipeline in a NAS, as the EDL needs MongoDB, which may lead to permission issues in a NAS.)
 
+Hardware requirements (of original scripts, not any of my changes)
+- CPU with >= 16 cores
+- A GPU for model inference
+- Disk space >= ~350GB (for trained models)
+- RAM >= 100GB (realistically closer to 110GB)
+- A fast network to download 350GB of trained models...
+
+Software requirements
+- **STRONGLY** recommend running in "native" linux environment (i.e. **not** WSL2 or similar). This is due to a known bug in the Windows/OSX versions of MongoDB for docker. See [the documentation](https://hub.docker.com/_/mongo) and CTRL-F "WARNING (Windows & OS X)" for details.
+- Up to date GPU drivers for Docker. 
+
 ## Quick Start
 
 ### Running on raw text data
